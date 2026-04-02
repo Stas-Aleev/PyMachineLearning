@@ -1,0 +1,40 @@
+def dbscan(data, eps, min_samples):
+    n_points = len(data)
+    label= [0]*n_points
+    visited = [False]*n_points
+    n_cluster = 0
+
+    def get_neighbors(point_id):
+        neighbors=[]
+        point = data[point_id]
+        for i in range(n_points):
+            dustance_sq=sum((point[j] - data[i][j])**2 for j in range(len(point)))
+            if dustance_sq <= eps**2:
+                neighbors.append(i)              
+        return neighbors
+
+
+    for i in range(n_points):
+        if visited[i]: continue
+        visited[i] = True
+
+        neighbors = get_neighbors(i)
+        if len(neighbors) < min_samples:
+            label[i] = -1
+        else:
+            n_cluster +=1
+            label[i] = n_cluster
+
+            for neighbor_id in neighbors:
+                if not visited[neighbor_id]:
+                    visited[neighbor_id]=True
+                    neighbors_neighbor = get_neighbors(neighbor_id)
+
+                    if len(neighbors_neighbor) >= min_samples:
+                        for n in neighbors_neighbor:
+                            if not visited[n]:
+                                neighbors.append(n)
+                
+                if label[neighbor_id] == 0 or label[neighbor_id] == -1:
+                    label[neighbor_id] = n_cluster
+    return label
