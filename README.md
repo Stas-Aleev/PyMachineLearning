@@ -18,6 +18,6 @@ cluster
 
 regression
 
-GA
+GA (Алгоритм иметации отжига)
 
 openCV
